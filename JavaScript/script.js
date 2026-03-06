@@ -1,10 +1,72 @@
 const issueCardsContainer = document.getElementById("issue-cards-container");
 const issuesCount = document.getElementById("issues-count");
 
+const showIssuesDetails = document.getElementById("showIssuesDetails");
+
+const modalContainer = document.getElementById("modal-container");
+
+
+
 const createLebels = (lebels) => {
     const levelElement = lebels.map(lebel => `<div class="badge badge-soft badge-warning">${lebel.toUpperCase()}</div>`)
 
-    return levelElement.join(' '); 
+    return levelElement.join(' ');
+}
+
+/**
+ *    {
+      "id": 1,
+      "title": "Fix navigation menu on mobile devices",
+      "description": "The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior.",
+      "status": "open",
+      "labels": [
+        "bug",
+        "help wanted"
+      ],
+      "priority": "high",
+      "author": "john_doe",
+      "assignee": "jane_smith",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+ */
+
+//
+const showIssuesModal = async (id) => {
+    modalContainer.innerHTML = '';
+    const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
+    const data = await res.json();
+    const showData = data.data;
+    const modalDiv = document.createElement('div');
+    modalDiv.classList.add = ('bg-white p-4 space-y-4');
+    modalDiv.innerHTML = `
+                        <h2 class="text-lg font-bold">${showData.title}</h2>
+                        <p class="font-semibold flex justify-center items-center gap-2"><span
+                                class="bg-green-700 text-white rounded-full p-2">${showData.status}</span>• <span>Opened by Fahim
+                                Ahmed</span> •
+                            <span>22/02/2026</span>
+                        </p>
+                        <div class="flex gap-2">
+                            <span>BUG</span>
+                            <span>HELP WANTED</span>
+                        </div>
+                        <p>Press ESC key or click the button below to close</p>
+                        <div class="bg-gray-100 p-4 rounded-lg flex  items-center justify-around">
+                            <div class="flex-col">
+                                <p>Assignee:</p>
+                                <p class="font-semibold">Mahamud</p>
+                            </div>
+                            <div class=" flex-col">
+                                <p>Priority:</p>
+                                <p class="bg-red-600 text-white rounded-full p-2">HIGH</p>
+                            </div>
+                        </div>
+    `;
+
+    modalContainer.appendChild(modalDiv);
+
+    console.log(showData);
+    showIssuesDetails.showModal()
 }
 
 
@@ -69,7 +131,7 @@ const displayIssueCards = (issues) => {
         const cardDiv = document.createElement("div");
 
         cardDiv.innerHTML = `
-                <div class="bg-white border-t-8 ${borderColor} rounded-xl space-y-3">
+                <div onclick="showIssuesModal(${issue.id})" class="bg-white border-t-8 ${borderColor} rounded-xl space-y-3">
                     <div class="flex justify-between items-center gap-2 px-4 pt-2">
                         <img src="${issue.status === 'open' ? './assets/Open-Status.png' : './assets/Closed-Status.png'}" alt="${issue.status === 'open' ? 'Open Status' : 'Closed Status'}" class="w-6 h-6">
                         <div class="badge badge-soft ${badgeColor}">${priority}</div>

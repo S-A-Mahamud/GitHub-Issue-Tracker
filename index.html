@@ -28,7 +28,8 @@
                 <h1 class="text-2xl font-bold">GitHub Issue Tracker</h1>
             </div>
             <div class="join">
-                <input id="input-search" type="text" class="input join-item outline-none" placeholder="Search issues..." />
+                <input id="input-search" type="text" class="input join-item outline-none"
+                    placeholder="Search issues..." />
                 <button id="btn-search" class="btn btn-primary join-item rounded-r-full">Search</button>
             </div>
 
@@ -66,6 +67,22 @@
                 <!-- Issue cards will be dynamically inserted here -->
 
             </div>
+
+            <!-- Open the modal using ID.showModal() method -->
+            <!-- <button class="btn" onclick="">open modal</button> -->
+            <dialog id="showIssuesDetails" class="modal modal-bottom sm:modal-middle">
+                <div class="modal-box">
+                    <div id="modal-container">
+                       <!--Modal cards will be dynamically inserted here  -->
+                    </div>
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <!-- if there is a button in form, it will close the modal -->
+                            <button class="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
         </section>
 
     </main>
