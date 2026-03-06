@@ -1,5 +1,5 @@
 const issueCardsContainer = document.getElementById("issue-cards-container");
-
+const issuesCount = document.getElementById("issues-count");
 
 const createLebels = (lebels) => {
     const levelElement = lebels.map(lebel => `<div class="badge badge-soft badge-warning">${lebel.toUpperCase()}</div>`)
@@ -36,7 +36,10 @@ const loadIssueCards = async () => {
  */
 
 const displayIssueCards = (issues) => {
-    
+    //Array length
+    const count = issues.length;
+    //set/update count to UI
+    issuesCount.textContent = count;
 
     issueCardsContainer.innerHTML = ""; // Clear existing cards
 
@@ -44,8 +47,6 @@ const displayIssueCards = (issues) => {
     issues.forEach(issue => {
         // console.log(issue);
 
-        // const lendth = issue.length;
-        // console.log(lendth.innertext);
 
         // Determine border color based on issue status
         const borderColor =
@@ -62,25 +63,6 @@ const displayIssueCards = (issues) => {
                 : priority === 'MEDIUM'
                     ? 'badge-warning'
                     : 'badge text-gray-400';
-
-        // Generate label badges based on the labels array
-        // const labelsHTML = issue.labels.map(label => {
-
-        //     if (label === 'bug') {
-        //         return `
-        // <div class="badge badge-soft badge-error">
-        //     <img src="./assets/BugDroid.png" alt=""> BUG
-        // </div>`;
-        //     }
-
-        //     if (label === 'help wanted') {
-        //         return `
-        // <div class="badge badge-soft badge-warning">
-        //     <img src="./assets/Vector.png" alt=""> HELP WANTED
-        // </div>`;
-        //     }
-
-        // }).join('');
 
 
         // Create a card element for each issue
