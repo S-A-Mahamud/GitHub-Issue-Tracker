@@ -5,7 +5,8 @@ const showIssuesDetails = document.getElementById("showIssuesDetails");
 
 const modalContainer = document.getElementById("modal-container");
 
-
+const searchBtn = document.getElementById("btn-search");
+const searchInput = document.getElementById('input-search');
 
 const createLebels = (lebels) => {
     const levelElement = lebels.map(lebel => `<div class="badge badge-soft badge-warning">${lebel.toUpperCase()}</div>`)
@@ -37,35 +38,54 @@ const showIssuesModal = async (id) => {
     const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
     const data = await res.json();
     const showData = data.data;
+
+    //Stutus bg color condition
+    let bgColor;
+
+    if (showData.status === "open") {
+        bgColor = "bg-green-700"
+    } else {
+        bgColor = "bg-red-700"
+    }
+
+
+    //priority condition
+    const priority = showData.priority ? showData.priority.toUpperCase() : 'MEDIUM';
+    const badgeColor =
+        priority === 'HIGH'
+            ? 'badge-error'
+            : priority === 'MEDIUM'
+                ? 'badge-warning'
+                : 'badge text-gray-400';
+
+
     const modalDiv = document.createElement('div');
-    modalDiv.classList.add = ('bg-white p-4 space-y-4');
+    modalDiv.classList.add('bg-white', 'p-4', 'space-y-4');
     modalDiv.innerHTML = `
                         <h2 class="text-lg font-bold">${showData.title}</h2>
                         <p class="font-semibold flex justify-center items-center gap-2"><span
-                                class="bg-green-700 text-white rounded-full p-2">${showData.status}</span>• <span>Opened by Fahim
-                                Ahmed</span> •
-                            <span>22/02/2026</span>
+                                class="${bgColor} text-white rounded-full p-2">${showData.status.toUpperCase()}</span> • Opened by<span>${showData.author}</span> •
+                            <span>${showData.createdAt.split('T')[0].split('-').reverse().join('-')}</span>
                         </p>
                         <div class="flex gap-2">
-                            <span>BUG</span>
-                            <span>HELP WANTED</span>
+                            <span class="badge badge-soft ${badgeColor}">${priority}</span>
                         </div>
-                        <p>Press ESC key or click the button below to close</p>
+                        <p>${showData.description}</p>
                         <div class="bg-gray-100 p-4 rounded-lg flex  items-center justify-around">
                             <div class="flex-col">
                                 <p>Assignee:</p>
-                                <p class="font-semibold">Mahamud</p>
+                                <p class="font-semibold">${showData.author}</p>
                             </div>
                             <div class=" flex-col">
                                 <p>Priority:</p>
-                                <p class="bg-red-600 text-white rounded-full p-2">HIGH</p>
+                               <span class="badge badge-soft ${badgeColor}">${priority}</span>
                             </div>
                         </div>
     `;
 
     modalContainer.appendChild(modalDiv);
 
-    console.log(showData);
+    // console.log(showData);
     showIssuesDetails.showModal()
 }
 
@@ -157,3 +177,35 @@ const displayIssueCards = (issues) => {
 }
 
 loadIssueCards();
+
+
+searchBtn.addEventListener('click', () => {   
+    const searchValue = searchInput.value.trim().toLowerCase();
+
+    if (searchValue === '') {
+        alert('Plz search someting')
+        return;
+    }
+
+    fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues`)
+        .then(res => res.json())
+        .then(data => {
+            const allIssues = data.data;
+            const filterIssues = allIssues.filter(issue => issue.title.toLowerCase().includes(searchValue));
+
+            //Empty input after search
+            searchInput.value = "";
+
+            if (filterIssues.length > 0) {
+                displayIssueCards(filterIssues);
+            } else {
+                issueCardsContainer.innerHTML = `
+                <div class="bg-[#BADEFF26] text-center p-6 rounded-lg shadow-md space-y-4 col-span-full">
+                        
+                        <p>Sorry, we couldn't find any matching issues.</p>
+                        <h3 class="text-2xl font-bold">Try searching with a different issue</h3>
+                    </div>
+                `;
+            }
+        })
+})
