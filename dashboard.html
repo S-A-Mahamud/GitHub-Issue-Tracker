@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GitHub Issue Tracker</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="./assets/github-logo.png" type="image/x-icon">
+    <!-- Tailwind CSS + DaisyUI cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<style>
+    body {
+        font-family: "Geist", sans-serif;
+    }
+</style>
+
+<body class="bg-gray-200 min-h-screen">
+    <header class="w-11/12 bg-white shadow-md rounded-b-xl mx-auto sticky top-0 z-20">
+        <nav class=" p-4 flex flex-col sm:flex-row justify-between items-center ">
+            <div class="flex items-center gap-2">
+                <img class=" max-h-10" src="./assets/github-logo.png" alt="GitHub Logo">
+                <h1 class="text-xl sm:text-2xl font-bold">GitHub Issue Tracker</h1>
+            </div>
+            <div class="join mt-2 sm:mt-0">
+                <input id="input-search" type="text" class="input join-item outline-none"
+                    placeholder="Search issues..." />
+                <button id="btn-search" class="btn btn-primary join-item rounded-r-full">Search</button>
+            </div>
+
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <!-- Issue Filter Section -->
+        <section class="bg-white p-4 rounded-xl mb-4 shadow-md flex gap-4">
+            <button id="all-tab-btn" class="btn btn-primary">All</button>
+            <button id="open-tab-btn" class="btn">Open</button>
+            <button id="closed-tab-btn" class="btn">Closed</button>
+        </section>
+
+
+        <!-- Issue List Section -->
+        <section>
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-t-xl border-b-1 border-gray-300">
+                <div class="flex items-center gap-2">
+                    <img class="bg-[#ECE4FF] p-2 rounded-full" src="./assets/Aperture.png" alt="">
+                    <div>
+                        <h2 class="text-2xl font-bold "><span id="issues-count">0</span> Issues</h2>
+                        <p class="text-gray-500 ">Track and manage your project issues</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <p><span class="badge bg-green-700 badge-xs"></span> Open</p>
+                    <p> <span class="badge bg-[#A855F7] badge-xs"></span> Closed</p>
+                </div>
+            </div>
+
+            <div id="loading-spinner" class="h-[60vh] flex justify-center items-center hidden">
+                <span class="loading loading-dots loading-xl text-primary"></span>
+            </div>
+
+            <!-- Issue Cards -->
+            <div id="issue-cards-container"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 bg-gray-100 p-4 rounded-b-xl mb-2">
+                <!-- Issue cards will be dynamically inserted here -->
+
+            </div>
+
+
+
+            <!-- Open the modal using ID.showModal() method -->
+            <!-- <button class="btn" onclick="">open modal</button> -->
+            <dialog id="showIssuesDetails" class="modal modal-bottom sm:modal-middle">
+                <div class="modal-box">
+                    <div id="modal-container">
+                        <!--Modal cards will be dynamically inserted here  -->
+                    </div>
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <!-- if there is a button in form, it will close the modal -->
+                            <button class="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </section>
+
+    </main>
+
+
+    <script src="./JavaScript/app.js"></script>
+</body>
+
+</html>
