@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Issue Tracker</title>
+    <!-- Favicon -->
+     <link rel="shortcut icon" href="./assets/github-logo.png" type="image/x-icon">
     <!-- Tailwind CSS + DaisyUI cdn -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -61,7 +63,9 @@
                 </div>
             </div>
 
-           
+            <div id="loading-spinner" class="h-[60vh] flex justify-center items-center hidden">
+                <span class="loading loading-dots loading-xl text-primary"></span>
+            </div>
 
             <!-- Issue Cards -->
             <div id="issue-cards-container"
@@ -70,14 +74,14 @@
 
             </div>
 
-           
+
 
             <!-- Open the modal using ID.showModal() method -->
             <!-- <button class="btn" onclick="">open modal</button> -->
             <dialog id="showIssuesDetails" class="modal modal-bottom sm:modal-middle">
                 <div class="modal-box">
                     <div id="modal-container">
-                       <!--Modal cards will be dynamically inserted here  -->
+                        <!--Modal cards will be dynamically inserted here  -->
                     </div>
                     <div class="modal-action">
                         <form method="dialog">

@@ -14,6 +14,16 @@ const allTabBtn = document.getElementById("all-tab-btn");
 const openTabBtn = document.getElementById("open-tab-btn");
 const closedTabBtn = document.getElementById("closed-tab-btn");
 
+const loadingSpinner = document.getElementById("loading-spinner");
+
+const loadingToggleSpinner = (showSpinner) => {
+    if (showSpinner) {
+        loadingSpinner.classList.remove("hidden");
+    }
+    else {
+        loadingSpinner.classList.add("hidden");
+    }
+}
 
 const toggleBtn = (activeBtn) => {
     const filterAllBtn = [allTabBtn, openTabBtn, closedTabBtn];
@@ -36,10 +46,23 @@ const createLebels = (lebels) => {
 
 //
 const showIssuesModal = async (id) => {
-    modalContainer.innerHTML = '';
+
+    showIssuesDetails.showModal()
+
+    // loadingToggleSpinner(true);
+
+     modalContainer.innerHTML = `
+        <div class="p-36 flex justify-center items-center">
+            <span class="loading loading-dots loading-xl text-primary"></span>
+        </div>
+    `;
+
     const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
     const data = await res.json();
     const showData = data.data;
+    
+    modalContainer.innerHTML = '';
+
 
     //Stutus bg color condition
     let bgColor;
@@ -88,17 +111,21 @@ const showIssuesModal = async (id) => {
     modalContainer.appendChild(modalDiv);
 
     // console.log(showData);
-    showIssuesDetails.showModal()
+
+
+    // loadingToggleSpinner(false);
 }
 
 
 // Function to create an issue card
 const loadIssueCards = async () => {
+    loadingToggleSpinner(true);
     const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues");
     // console.log(res);
     const data = await res.json();
     allIssues = data.data;
     displayIssueCards(allIssues);
+    loadingToggleSpinner(false);
 }
 
 
@@ -175,6 +202,8 @@ loadIssueCards();
 //Search functionality added
 searchBtn.addEventListener('click', () => {
 
+    loadingToggleSpinner(true);
+
     // remove active tab
     [allTabBtn, openTabBtn, closedTabBtn].forEach(btn => {
         btn.classList.remove("btn-primary");
@@ -202,12 +231,13 @@ searchBtn.addEventListener('click', () => {
             } else {
                 issueCardsContainer.innerHTML = `
                 <div class="bg-[#BADEFF26] text-center p-6 rounded-lg shadow-md space-y-4 col-span-full">
-                        
-                        <p>Sorry, we couldn't find any matching issues.</p>
-                        <h3 class="text-2xl font-bold">Try searching with a different issue</h3>
-                    </div>
+                
+                <p>Sorry, we couldn't find any matching issues.</p>
+                <h3 class="text-2xl font-bold">Try searching with a different issue</h3>
+                </div>
                 `;
             }
+            loadingToggleSpinner(false);
         })
 })
 
