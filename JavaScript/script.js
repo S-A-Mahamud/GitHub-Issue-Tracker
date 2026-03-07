@@ -1,3 +1,5 @@
+let allIssues = [];
+
 const issueCardsContainer = document.getElementById("issue-cards-container");
 const issuesCount = document.getElementById("issues-count");
 
@@ -8,29 +10,29 @@ const modalContainer = document.getElementById("modal-container");
 const searchBtn = document.getElementById("btn-search");
 const searchInput = document.getElementById('input-search');
 
+const allTabBtn = document.getElementById("all-tab-btn");
+const openTabBtn = document.getElementById("open-tab-btn");
+const closedTabBtn = document.getElementById("closed-tab-btn");
+
+
+const toggleBtn = (activeBtn) => {
+    const filterAllBtn = [allTabBtn, openTabBtn, closedTabBtn];
+
+    filterAllBtn.forEach(btn => {
+        btn.classList.remove("btn-primary");
+        // btn.classList.add("btn");
+    })
+    activeBtn.classList.add("btn-primary");
+    // activeBtn.classList.remove("btn");
+
+}
+
+
 const createLebels = (lebels) => {
     const levelElement = lebels.map(lebel => `<div class="badge badge-soft badge-warning">${lebel.toUpperCase()}</div>`)
 
     return levelElement.join(' ');
 }
-
-/**
- *    {
-      "id": 1,
-      "title": "Fix navigation menu on mobile devices",
-      "description": "The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior.",
-      "status": "open",
-      "labels": [
-        "bug",
-        "help wanted"
-      ],
-      "priority": "high",
-      "author": "john_doe",
-      "assignee": "jane_smith",
-      "createdAt": "2024-01-15T10:30:00Z",
-      "updatedAt": "2024-01-15T10:30:00Z"
-    },
- */
 
 //
 const showIssuesModal = async (id) => {
@@ -95,27 +97,10 @@ const loadIssueCards = async () => {
     const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues");
     // console.log(res);
     const data = await res.json();
-    displayIssueCards(data.data);
+    allIssues = data.data;
+    displayIssueCards(allIssues);
 }
 
-
-/**
- *     {
-      "id": 1,
-      "title": "Fix navigation menu on mobile devices",
-      "description": "The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior.",
-      "status": "open",
-      "labels": [
-        "bug",
-        "help wanted"
-      ],
-      "priority": "high",
-      "author": "john_doe",
-      "assignee": "jane_smith",
-      "createdAt": "2024-01-15T10:30:00Z",
-      "updatedAt": "2024-01-15T10:30:00Z"
-    },
- */
 
 const displayIssueCards = (issues) => {
     //Array length
@@ -176,10 +161,26 @@ const displayIssueCards = (issues) => {
     });
 }
 
+const filterIssuesByStatus = (status) => {
+    if (status === "all") {
+        displayIssueCards(allIssues);
+        return;
+    }
+    const filtered = allIssues.filter(issue => issue.status === status);
+    displayIssueCards(filtered);
+}
+
 loadIssueCards();
 
+//Search functionality added
+searchBtn.addEventListener('click', () => {
 
-searchBtn.addEventListener('click', () => {   
+    // remove active tab
+    [allTabBtn, openTabBtn, closedTabBtn].forEach(btn => {
+        btn.classList.remove("btn-primary");
+    });
+
+
     const searchValue = searchInput.value.trim().toLowerCase();
 
     if (searchValue === '') {
@@ -209,3 +210,17 @@ searchBtn.addEventListener('click', () => {
             }
         })
 })
+
+// event listeners
+allTabBtn.addEventListener("click", () => {
+    toggleBtn(allTabBtn);
+    filterIssuesByStatus("all");
+});
+openTabBtn.addEventListener("click", () => {
+    toggleBtn(openTabBtn);
+    filterIssuesByStatus("open");
+});
+closedTabBtn.addEventListener("click", () => {
+    toggleBtn(closedTabBtn);
+    filterIssuesByStatus("closed");
+});

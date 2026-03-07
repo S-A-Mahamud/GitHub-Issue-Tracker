@@ -39,9 +39,9 @@
     <main class="container mx-auto p-4">
         <!-- Issue Filter Section -->
         <section class="bg-white p-4 rounded-xl mb-4 shadow-md flex gap-4 sticky top-4 z-10 ">
-            <button class="btn btn-primary">All</button>
-            <button class="btn">Open</button>
-            <button class="btn">Closed</button>
+            <button id="all-tab-btn" class="btn btn-primary">All</button>
+            <button id="open-tab-btn" class="btn">Open</button>
+            <button id="closed-tab-btn" class="btn">Closed</button>
         </section>
 
 
@@ -61,12 +61,16 @@
                 </div>
             </div>
 
+           
+
             <!-- Issue Cards -->
             <div id="issue-cards-container"
-                class="grid grid-cols-1 sm:grid-cols-3  gap-4 bg-gray-100 p-4 rounded-b-xl mb-2">
+                class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4  gap-4 bg-gray-100 p-4 rounded-b-xl mb-2">
                 <!-- Issue cards will be dynamically inserted here -->
 
             </div>
+
+           
 
             <!-- Open the modal using ID.showModal() method -->
             <!-- <button class="btn" onclick="">open modal</button> -->
