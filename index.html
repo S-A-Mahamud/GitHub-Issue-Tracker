@@ -15,6 +15,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+
+    <script>
+        // If the user is ALREADY logged in, skip the login page and go home
+        if (localStorage.getItem("isLoggedIn") === "true") {
+            window.location.href = "./dashboard.html";
+        }
+    </script>
 </head>
 <style>
     body {
@@ -32,13 +39,15 @@
             </div>
             <fieldset class="fieldset">
                 <label class="label text-lg text-black">Username</label>
-                <input id="input-username" type="text" class="input validator w-full" placeholder="Enter Username" required />
+                <input id="input-username" type="text" class="input validator w-full" placeholder="Enter Username"
+                    required />
                 <p class="validator text-primary">Default: admin</p>
             </fieldset>
 
             <label class="fieldset">
                 <span class="label text-lg text-black">Password</span>
-                <input id="input-password" type="password" class="input validator w-full" placeholder="Enter Password" required />
+                <input id="input-password" type="password" class="input validator w-full" placeholder="Enter Password"
+                    required />
                 <span class="validator text-primary">Default: admin123</span>
             </label>
 
@@ -56,7 +65,7 @@
                 <p class="text-md sm:text-[1rem]"><span class="font-bold">Password:</span> admin123</p>
             </div>
 
-            
+
         </form>
     </main>
 

@@ -41,11 +41,11 @@ const toggleBtn = (activeBtn) => {
 const labelConfig = {
     bug: {
         color: "badge badge-soft badge-error text-[0.7rem]",
-        icon: "../assets/BugDroid.png"
+        icon: "./assets/BugDroid.png"
     },
     "good first issue": {
         color: "badge badge-success text-[0.7rem]",
-        icon: "../assets/target.png"
+        icon: "./assets/target.png"
     },
     enhancement: {
         color: "badge badge-soft badge-success text-[0.7rem]",
@@ -53,7 +53,7 @@ const labelConfig = {
     },
     documentation: {
         color: "badge badge-soft badge-info text-[0.7rem]",
-        icon: "../assets/file.png"
+        icon: "./assets/file.png"
     }
 };
 
@@ -64,7 +64,7 @@ const createLebels = (labels) => {
         console.log(label);
         const config = labelConfig[label.toLowerCase()] || {
             color: "badge badge-soft badge-warning text-[0.7rem]",
-            icon: "../assets/Vector.png"
+            icon: "./assets/Vector.png"
         };
 
         const iconHTML = config.icon.includes(".png")
