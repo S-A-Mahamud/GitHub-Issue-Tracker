@@ -23,24 +23,26 @@
 </style>
 
 <body class="flex justify-center items-center min-h-screen bg-gray-200">
-    <main>
-        <form class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+    <main class="w-full max-w-[32.5rem]">
+        <form class="fieldset bg-base-200 border-base-300 rounded-box  border p-8 shadow-lg">
             <div class="space-y-2 flex flex-col justify-center items-center">
                 <img class="" src="./assets/github-logo.png" alt="Github-logo">
-                <h3 class="text-2xl font-bold">GitHub Issues Tracker</h3>
-                <p class="text-gray-500">Sign in to manage your issues</p>
+                <h3 class="text-xl sm:text-2xl font-bold">GitHub Issues Tracker</h3>
+                <p class="text-gray-500 text-md sm:text-[1rem]">Sign in to manage your issues</p>
             </div>
             <fieldset class="fieldset">
                 <label class="label text-lg text-black">Username</label>
-                <input id="input-username" type="text" class="input validator" placeholder="Enter Username" required />
+                <input id="input-username" type="text" class="input validator w-full" placeholder="Enter Username" required />
                 <p class="validator text-primary">Default: admin</p>
             </fieldset>
 
             <label class="fieldset">
                 <span class="label text-lg text-black">Password</span>
-                <input id="input-password" type="password" class="input validator" placeholder="Enter Password" required />
+                <input id="input-password" type="password" class="input validator w-full" placeholder="Enter Password" required />
                 <span class="validator text-primary">Default: admin123</span>
             </label>
+
+            <p id="alertMessage" class="text-lg text-red-600"></p>
 
             <button id="signIn-btn" class="btn btn-primary text-lg mt-4" type="submit">Sign In</button>
             <div class="flex items-center my-4">
@@ -48,11 +50,13 @@
                 <span class="mx-4 text-gray-500 font-semibold">OR</span>
                 <hr class="flex-grow border-gray-300">
             </div>
-            <p class="text-center text-gray-600">Demo Credentials:</p>
-            <div class="text-center bg-gray-200 p-2 rounded-md">
-                <p><span class="font-bold">Username:</span> admin</p>
-                <p><span class="font-bold">Password:</span> admin123</p>
+            <p class="text-center text-gray-600 text-md sm:text-[1rem]">Demo Credentials:</p>
+            <div class="text-center bg-gray-200 p-4 rounded-md">
+                <p class="text-md sm:text-[1rem]"><span class="font-bold ">Username:</span> admin</p>
+                <p class="text-md sm:text-[1rem]"><span class="font-bold">Password:</span> admin123</p>
             </div>
+
+            
         </form>
     </main>
 

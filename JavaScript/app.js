@@ -38,11 +38,50 @@ const toggleBtn = (activeBtn) => {
 }
 
 
-const createLebels = (lebels) => {
-    const levelElement = lebels.map(lebel => `<div class="badge badge-soft badge-warning">${lebel.toUpperCase()}</div>`)
+const labelConfig = {
+    bug: {
+        color: "badge badge-soft badge-error text-[0.7rem]",
+        icon: "../assets/BugDroid.png"
+    },
+    "good first issue": {
+        color: "badge badge-success text-[0.7rem]",
+        icon: "../assets/target.png"
+    },
+    enhancement: {
+        color: "badge badge-soft badge-success text-[0.7rem]",
+        icon: "./assets/starVector.png"
+    },
+    documentation: {
+        color: "badge badge-soft badge-info text-[0.7rem]",
+        icon: "../assets/file.png"
+    }
+};
 
-    return levelElement.join(' ');
+
+const createLebels = (labels) => {
+
+    const levelElement = labels.map(label => {
+        console.log(label);
+        const config = labelConfig[label.toLowerCase()] || {
+            color: "badge badge-soft badge-warning text-[0.7rem]",
+            icon: "../assets/Vector.png"
+        };
+
+        const iconHTML = config.icon.includes(".png")
+            ? `<img src="${config.icon}" class="w-4 h-4 object-contain">`
+            : `<span>${config.icon}</span>`;
+
+        return `
+        <div class="badge ${config.color} gap-1">
+            ${iconHTML}
+            ${label.toUpperCase()}
+        </div>
+        `
+    });
+
+    return levelElement.join('');
 }
+
 
 //
 const showIssuesModal = async (id) => {
@@ -51,7 +90,7 @@ const showIssuesModal = async (id) => {
 
     // loadingToggleSpinner(true);
 
-     modalContainer.innerHTML = `
+    modalContainer.innerHTML = `
         <div class="p-36 flex justify-center items-center">
             <span class="loading loading-dots loading-xl text-primary"></span>
         </div>
@@ -60,7 +99,7 @@ const showIssuesModal = async (id) => {
     const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
     const data = await res.json();
     const showData = data.data;
-    
+
     modalContainer.innerHTML = '';
 
 
@@ -135,11 +174,11 @@ const displayIssueCards = (issues) => {
     //set/update count to UI
     issuesCount.textContent = count;
 
-    issueCardsContainer.innerHTML = ""; // Clear existing cards
+    issueCardsContainer.innerHTML = " "; // Clear existing cards
 
     //Issues cards genaretor
     issues.forEach(issue => {
-        // console.log(issue);
+        console.log(issue);
 
 
         // Determine border color based on issue status
@@ -149,7 +188,7 @@ const displayIssueCards = (issues) => {
                 : 'border-[#A855F7]';
 
 
-        // Determine badge color based on priority (assuming priority can be 'high', 'medium', 'low') 
+        // Determine badge color based on priority
         const priority = issue.priority ? issue.priority.toUpperCase() : 'MEDIUM';
         const badgeColor =
             priority === 'HIGH'
@@ -163,24 +202,24 @@ const displayIssueCards = (issues) => {
         const cardDiv = document.createElement("div");
 
         cardDiv.innerHTML = `
-                <div onclick="showIssuesModal(${issue.id})" class="bg-white border-t-8 ${borderColor} rounded-xl space-y-3">
+                <div onclick="showIssuesModal(${issue.id})" class="bg-white border-t-4 ${borderColor} rounded-xl space-y-3 h-full">
                     <div class="flex justify-between items-center gap-2 px-4 pt-2">
                         <img src="${issue.status === 'open' ? './assets/Open-Status.png' : './assets/Closed-Status.png'}" alt="${issue.status === 'open' ? 'Open Status' : 'Closed Status'}" class="w-6 h-6">
                         <div class="badge badge-soft ${badgeColor}">${priority}</div>
                     </div>
                     <h2 class="text-lg font-semibold px-4">${issue.title}</h2>
                     <p class="text-gray-500 line-clamp-2 px-4">${issue.description}</p>
-                    <div class="flex gap-2 px-4">
+                    <div class="flex flex-col xl:flex-row gap-2 px-4">
                     ${createLebels(issue.labels)}
                     </div>
                     <hr class="border-gray-200 w-full">
                     <div class="flex justify-between items-center px-4 pb-2">
-                    <p class=" text-gray-500 "><span>#${issue.id}</span>  ${issue.author}</p>
+                    <p class=" text-gray-500"><span>#${issue.id}</span>  ${issue.author}</p>
                     <p class=" text-gray-500 ">${issue.createdAt.split('T')[0].split('-').reverse().join('-')}</p>
                     </div>
                     <div class="flex justify-between items-center px-4 pb-2">
-                    <p class=" text-gray-500 ">Assignee: <span>${issue.assignee ? issue.assignee : 'Unassigned'}</span></p>
-                    <p class=" text-gray-500 "><span>Updated:</span> ${issue.updatedAt.split('T')[0].split('-').reverse().join('-')}</p>
+                    <p class=" text-gray-500">Assignee: <span>${issue.assignee ? issue.assignee : 'Unassigned'}</span></p>
+                    <p class=" text-gray-500"><span>Updated:</span> ${issue.updatedAt.split('T')[0].split('-').reverse().join('-')}</p>
                     </div>
                 </div>
         `;
