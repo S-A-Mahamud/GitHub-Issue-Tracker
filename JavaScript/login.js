@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else if (password !== 'admin123') {
                 alertMessage.textContent = "Password is incorrect!";
             } else {
+                // user authentication check and get local storage
                 localStorage.setItem("isLoggedIn", "true");
                 window.location.href = "dashboard.html";  //success → redirect
             }
