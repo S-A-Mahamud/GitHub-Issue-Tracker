@@ -1,21 +1,27 @@
+// Global variable to store all issues
 let allIssues = [];
 
+// DOM elements
 const issueCardsContainer = document.getElementById("issue-cards-container");
 const issuesCount = document.getElementById("issues-count");
 
+// Modal elements
 const showIssuesDetails = document.getElementById("showIssuesDetails");
-
 const modalContainer = document.getElementById("modal-container");
 
+// Search and filter elements
 const searchBtn = document.getElementById("btn-search");
 const searchInput = document.getElementById('input-search');
 
+// Filter buttons
 const allTabBtn = document.getElementById("all-tab-btn");
 const openTabBtn = document.getElementById("open-tab-btn");
 const closedTabBtn = document.getElementById("closed-tab-btn");
 
+// Loading spinner element
 const loadingSpinner = document.getElementById("loading-spinner");
 
+// Function to toggle loading spinner visibility
 const loadingToggleSpinner = (showSpinner) => {
     if (showSpinner) {
         loadingSpinner.classList.remove("hidden");
@@ -25,82 +31,76 @@ const loadingToggleSpinner = (showSpinner) => {
     }
 }
 
+// Function to toggle active state of filter buttons
 const toggleBtn = (activeBtn) => {
     const filterAllBtn = [allTabBtn, openTabBtn, closedTabBtn];
 
     filterAllBtn.forEach(btn => {
         btn.classList.remove("btn-primary");
-        // btn.classList.add("btn");
     })
     activeBtn.classList.add("btn-primary");
-    // activeBtn.classList.remove("btn");
-
 }
 
 
+// Label configuration for different label types
 const labelConfig = {
     bug: {
-        color: "badge badge-soft badge-error text-[0.7rem]",
+        color: "badge-soft badge-error",
         icon: "./assets/BugDroid.png"
     },
     "good first issue": {
-        color: "badge badge-success text-[0.7rem]",
+        color: "badge-success",
         icon: "./assets/target.png"
     },
     enhancement: {
-        color: "badge badge-soft badge-success text-[0.7rem]",
+        color: "badge-soft badge-success",
         icon: "./assets/starVector.png"
     },
     documentation: {
-        color: "badge badge-soft badge-info text-[0.7rem]",
+        color: "badge-soft badge-info",
         icon: "./assets/file.png"
     }
 };
 
 
-const createLebels = (labels) => {
+// Function to create label HTML based on label type and configuration
+const createLabels = (labels) => {
+    return labels.map(label => {
 
-    const levelElement = labels.map(label => {
-        console.log(label);
-        const config = labelConfig[label.toLowerCase()] || {
-            color: "badge badge-soft badge-warning text-[0.7rem]",
+        const { color, icon } = labelConfig[label.toLowerCase()] || {
+            color: "badge-soft badge-warning",
             icon: "./assets/Vector.png"
         };
 
-        const iconHTML = config.icon.includes(".png")
-            ? `<img src="${config.icon}" class="w-4 h-4 object-contain">`
-            : `<span>${config.icon}</span>`;
-
         return `
-        <div class="badge ${config.color} gap-1">
-            ${iconHTML}
+        <div class="badge ${color} text-[0.7rem] gap-1">
+            <img src="${icon}" class="w-4 h-4">
             ${label.toUpperCase()}
         </div>
-        `
-    });
+        `;
 
-    return levelElement.join('');
-}
+    }).join("");
+};
 
 
-//
+// Function to show issue details in a modal
 const showIssuesModal = async (id) => {
 
     showIssuesDetails.showModal()
 
-    // loadingToggleSpinner(true);
-
+    // loading spinner while fetching data
     modalContainer.innerHTML = `
         <div class="p-36 flex justify-center items-center">
             <span class="loading loading-dots loading-xl text-primary"></span>
         </div>
     `;
 
-    const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
+    try {
+        const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
     const data = await res.json();
     const showData = data.data;
 
-    modalContainer.innerHTML = '';
+    modalContainer.innerHTML = ''; // Clear previous content
 
 
     //Stutus bg color condition
@@ -123,6 +123,7 @@ const showIssuesModal = async (id) => {
                 : 'badge text-gray-400';
 
 
+    // Modal content
     const modalDiv = document.createElement('div');
     modalDiv.classList.add('bg-white', 'p-4', 'space-y-4');
     modalDiv.innerHTML = `
@@ -142,44 +143,48 @@ const showIssuesModal = async (id) => {
                             </div>
                             <div class=" flex-col">
                                 <p>Priority:</p>
-                               <span class="badge badge-soft ${badgeColor}">${priority}</span>
+                               <span class="badge bg-red-600 text-white  ${badgeColor}">${priority}</span>
                             </div>
                         </div>
     `;
-
     modalContainer.appendChild(modalDiv);
-
-    // console.log(showData);
-
-
-    // loadingToggleSpinner(false);
+    }
+    catch (error) {
+        console.error("Failed to load issue details:", error);
+        modalContainer.innerHTML = `<p class="text-red-500 text-center">Failed to load issue details. Please try again.</p>`;
+    }
 }
 
 
 // Function to create an issue card
 const loadIssueCards = async () => {
-    loadingToggleSpinner(true);
-    const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues");
-    // console.log(res);
-    const data = await res.json();
-    allIssues = data.data;
-    displayIssueCards(allIssues);
-    loadingToggleSpinner(false);
+    loadingToggleSpinner(true); //Spinner show 
+    try {
+        const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues");
+        const data = await res.json();
+        allIssues = data.data;
+        displayIssueCards(allIssues);
+    } catch (error) {
+        console.error("Failed to load issues:", error);
+        issueCardsContainer.innerHTML = `<p class="text-red-500 text-center">Failed to load issues. Please try again.</p>`;
+    } finally {
+        loadingToggleSpinner(false); //spinner hide 
+    }
 }
 
 
+// Function to display issue cards on the UI
 const displayIssueCards = (issues) => {
     //Array length
     const count = issues.length;
     //set/update count to UI
     issuesCount.textContent = count;
 
-    issueCardsContainer.innerHTML = " "; // Clear existing cards
+    issueCardsContainer.innerHTML = " ";  // Clear previous cards
 
     //Issues cards genaretor
     issues.forEach(issue => {
-        console.log(issue);
-
+        // console.log(issue);
 
         // Determine border color based on issue status
         const borderColor =
@@ -201,6 +206,7 @@ const displayIssueCards = (issues) => {
         // Create a card element for each issue
         const cardDiv = document.createElement("div");
 
+        // Card content with dynamic data and styling based on issue properties
         cardDiv.innerHTML = `
                 <div onclick="showIssuesModal(${issue.id})" class="bg-white border-t-4 ${borderColor} rounded-xl space-y-3 h-full">
                     <div class="flex justify-between items-center gap-2 px-4 pt-2">
@@ -210,7 +216,7 @@ const displayIssueCards = (issues) => {
                     <h2 class="text-lg font-semibold px-4">${issue.title}</h2>
                     <p class="text-gray-500 line-clamp-2 px-4">${issue.description}</p>
                     <div class="flex flex-col xl:flex-row gap-2 px-4">
-                    ${createLebels(issue.labels)}
+                        ${createLabels(issue.labels)}
                     </div>
                     <hr class="border-gray-200 w-full">
                     <div class="flex justify-between items-center px-4 pb-2">
@@ -227,6 +233,8 @@ const displayIssueCards = (issues) => {
     });
 }
 
+
+// Function to filter issues based on status
 const filterIssuesByStatus = (status) => {
     if (status === "all") {
         displayIssueCards(allIssues);
@@ -236,49 +244,47 @@ const filterIssuesByStatus = (status) => {
     displayIssueCards(filtered);
 }
 
+
 loadIssueCards();
 
+
 //Search functionality added
-searchBtn.addEventListener('click', () => {
-
-    loadingToggleSpinner(true);
-
-    // remove active tab
-    [allTabBtn, openTabBtn, closedTabBtn].forEach(btn => {
-        btn.classList.remove("btn-primary");
-    });
-
-
+searchBtn.addEventListener('click', async () => {
     const searchValue = searchInput.value.trim().toLowerCase();
-
     if (searchValue === '') {
-        alert('Plz search someting')
+        alert('Plz search something');
         return;
     }
 
-    fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues`)
-        .then(res => res.json())
-        .then(data => {
-            const allIssues = data.data;
-            const filterIssues = allIssues.filter(issue => issue.title.toLowerCase().includes(searchValue));
+    loadingToggleSpinner(true); // spinner show
+    [allTabBtn, openTabBtn, closedTabBtn].forEach(btn => btn.classList.remove("btn-primary"));
 
-            //Empty input after search
-            searchInput.value = "";
+    try {
+        const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues`);
+        const data = await res.json();
+        const filterIssues = data.data.filter(issue => issue.title.toLowerCase().includes(searchValue));
 
-            if (filterIssues.length > 0) {
-                displayIssueCards(filterIssues);
-            } else {
-                issueCardsContainer.innerHTML = `
-                <div class="bg-[#BADEFF26] text-center p-6 rounded-lg shadow-md space-y-4 col-span-full">
-                
+        //Empty input after search
+        searchInput.value = "";
+
+        if (filterIssues.length > 0) {
+            displayIssueCards(filterIssues);
+        } else {
+            issueCardsContainer.innerHTML = `
+            <div class="bg-[#BADEFF26] text-center p-6 rounded-lg shadow-md space-y-4 col-span-full">
                 <p>Sorry, we couldn't find any matching issues.</p>
                 <h3 class="text-2xl font-bold">Try searching with a different issue</h3>
-                </div>
-                `;
-            }
-            loadingToggleSpinner(false);
-        })
-})
+            </div>
+            `;
+        }
+    } catch (error) {
+        console.error("Search failed:", error);
+        issueCardsContainer.innerHTML = `<p class="text-red-500 text-center">Search failed. Try again.</p>`;
+    } finally {
+        loadingToggleSpinner(false); // spinner hide
+    }
+});
+
 
 // event listeners
 allTabBtn.addEventListener("click", () => {

@@ -1,10 +1,13 @@
+// Login form validation and authentication logic
 const inputUsername = document.getElementById("input-username");
 const inputPassword = document.getElementById("input-password");
 const alertMessage = document.getElementById("alertMessage");
 
+// Event listener for form submission
 document.addEventListener("DOMContentLoaded", function () {
     const signInBtn = document.getElementById("signIn-btn");
 
+    // check if the sign-in button exists before adding event listener
     if (signInBtn) {
         signInBtn.addEventListener("click", (event => {
             event.preventDefault();
